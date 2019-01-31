@@ -1,38 +1,90 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Let's have a cut macron</title>
-        <link rel="stylesheet" href="css/style.css">
-    </head>
-    <body onload="draw();">
-        <h1>Hello World</h1>
-        <h2>Photomaton</h2>
-        <div>
-            <img src="img/macron.jpg" alt="macron not found">
-        </div>
-        <!-- Photomaton test canva -->
-        <canvas width="512" height="512" id="photomaton"></canvas>
-        <input onchange="draw();" id="sizeInput" type="number" min="1">
-        <button onclick="draw();">Calc change</button>
-    </body>
-    <script src="js/script.js"></script>
-    <script>
-        function draw() {
-            var ctx = document.getElementById('photomaton').getContext('2d');
-            var img = new Image();
-            img.src = 'img/MonaLisa.jpg';
-            img.onload = function() {
-                let size = Math.pow(2, document.getElementById("sizeInput").value-1);
-                let width = 512/size;
-                for (var i = 0; i < size; i++) {
-                    for (var j = 0; j < size; j++) {
-                        ctx.drawImage(img, j * width, i * width, width, width);
-                    }
-                }
-                console.log("Done");
+
+<head>
+    <title>Traitement d'images</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1>Hello World</h1>
+    <h2>Photomaton</h2>
+    <img style="display:none" id="my-image" src="./img/macron.jpg" alt="Not found"><br>
+    <canvas id="image-canvas"></canvas><br>
+    <input type="file" name="" id="file" onchange="fileChanged(this)"><br>
+    <input id="sleepInput" type="number" min="1"><br>
+    <button onclick="drawPhotomaton()">Draw Photomaton</button>
+</body>
+<script src="js/script.js"></script>
+<script>
+    var img = document.getElementById('my-image');
+    var canvas = document.createElement('canvas');
+    var newCanvas = document.getElementById('image-canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    newCanvas.width = img.width;
+    newCanvas.height = img.height;
+
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/png");
+
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function fileChanged(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                console.log("Image loaded")
+                img.src = reader.result;
             };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function drawPhotomaton() {
+
+        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
+        while (getBase64Image(img) != getBase64Image(newCanvas)) {
+
+            let width = img.width;
+            let height = img.height;
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+
+                    var ctx = canvas.getContext('2d');
+                    var newCtx = newCanvas.getContext('2d');
+
+                    var pixelData = ctx.getImageData(x, y, 1, 1);
+
+                    if (x % 2 == 0 && y % 2 == 0)
+                        newCtx.putImageData(pixelData, x / 2, y / 2)
+                    else if (x % 2 == 0)
+                        newCtx.putImageData(pixelData, x / 2, height / 2 + y / 2)
+                    else if (y % 2 == 0)
+                        newCtx.putImageData(pixelData, width / 2 + x / 2, y / 2)
+                    else
+                        newCtx.putImageData(pixelData, width / 2 + x / 2, height / 2 + y / 2)
+                }
+            }
+
+            canvas.getContext('2d').drawImage(newCanvas, 0, 0);
+
+            await sleep(document.getElementById('sleepInput').value);
         }
 
-        
-    </script>
+    }
+</script>
+
 </html>
