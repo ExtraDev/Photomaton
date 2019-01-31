@@ -4,12 +4,28 @@
         <title>Let's have a cut macron</title>
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <body>
+    <body onload="draw();">
         <h1>Hello World</h1>
         <h2>Photomaton</h2>
         <div>
             <img src="img/macron.jpg" alt="macron not found">
         </div>
+        <!-- Photomaton test canva -->
+        <canvas width="256" height="256" id="photomaton"></canvas>
     </body>
     <script src="js/script.js"></script>
+    <script>
+        function draw() {
+            var ctx = document.getElementById('photomaton').getContext('2d');
+                var img = new Image();
+                img.src = 'img/macron.jpg';
+                img.onload = function() {
+                    for (var i = 0; i < 100; i++) {
+                        for (var j = 0; j < 100; j++) {
+                            ctx.drawImage(img, j * 2.56, i * 2.56, 2.56, 2.56);
+                        }
+                    }
+                };
+        }
+    </script>
 </html>
