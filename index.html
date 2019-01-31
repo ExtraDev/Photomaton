@@ -11,21 +11,28 @@
             <img src="img/macron.jpg" alt="macron not found">
         </div>
         <!-- Photomaton test canva -->
-        <canvas width="256" height="256" id="photomaton"></canvas>
+        <canvas width="512" height="512" id="photomaton"></canvas>
+        <input onchange="draw();" id="sizeInput" type="number" min="1">
+        <button onclick="draw();">Calc change</button>
     </body>
     <script src="js/script.js"></script>
     <script>
         function draw() {
             var ctx = document.getElementById('photomaton').getContext('2d');
-                var img = new Image();
-                img.src = 'img/macron.jpg';
-                img.onload = function() {
-                    for (var i = 0; i < 100; i++) {
-                        for (var j = 0; j < 100; j++) {
-                            ctx.drawImage(img, j * 2.56, i * 2.56, 2.56, 2.56);
-                        }
+            var img = new Image();
+            img.src = 'img/MonaLisa.jpg';
+            img.onload = function() {
+                let size = Math.pow(2, document.getElementById("sizeInput").value-1);
+                let width = 512/size;
+                for (var i = 0; i < size; i++) {
+                    for (var j = 0; j < size; j++) {
+                        ctx.drawImage(img, j * width, i * width, width, width);
                     }
-                };
+                }
+                console.log("Done");
+            };
         }
+
+        
     </script>
 </html>
