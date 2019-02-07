@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Traitement d'images</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+" crossorigin="anonymous">
+</head>
+
+<body>
+    <section class="container">
+        <h1>Hello World</h1>
+        <h2>Inverse (nul)</h2>
+        <img style="display:none" id="my-image" src="./img/macron.jpg" alt="Not found"><br>
+        <canvas id="image-canvas"></canvas><br>
+        <input type="file" name="" id="file" onchange="fileChanged(this)"><br>
+        <input class="form-control" id="sleepInput" type="number" min="1"><br>
+        <button class="btn btn-primary" onclick="drawPhotomaton()">Draw Photomaton</button>
+    </section>
+</body>
+<script src="js/script.js"></script>
+<script>
+    var img = document.getElementById('my-image');
+    var canvas = document.createElement('canvas');
+    var newCanvas = document.getElementById('image-canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    newCanvas.width = img.width;
+    newCanvas.height = img.height;
+
+    function getBase64Image(img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/png");
+
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function fileChanged(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                console.log("Image loaded")
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function drawPhotomaton() {
+
+        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
+        while (getBase64Image(img) != getBase64Image(newCanvas)) {
+
+            let width = img.width;
+            let height = img.height;
+
+            for (let y = height; y >= 0; y--) {
+                for (let x = width; x >= 0; x--) {
+
+                    var ctx = canvas.getContext('2d');
+                    var newCtx = newCanvas.getContext('2d');
+                    pixelData = ctx.getImageData(x, y, 1, 1);
+
+                    newCtx.putImageData(pixelData, width - x - 1, height - y - 1);                 
+                }
+            }
+
+            canvas.getContext('2d').drawImage(newCanvas, 0, 0);
+
+            await sleep(document.getElementById('sleepInput').value);
+        }
+
+    }
+</script>
+
+</html>
