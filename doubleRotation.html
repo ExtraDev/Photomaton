@@ -31,33 +31,35 @@
 
             return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
         }
-
+        
         async function draw() {
-            var ctx = document.getElementById('doublerotation').getContext('2d');
             var canvadoublerotation = document.getElementById('doublerotation');
             var pixelData;
             var img = new Image();
             img.src = 'img/MonaLisa.jpg';
-            img.onload = function() {
-                originCanva.getContext('2d').drawImage(img, 0, 0);
-                let imgSize = this.width;
-                while (getBase64Image(canvadoublerotation) != getBase64Image(originCanva)) {
-                    // for(let y = 0; y <= imgSize; y++){
-                    //     for(let x = 0; x <= imgSize; x++){
-                    //         pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
-                    //         ctx.putImageData(pixelData, x, y); //Applique au canvas de base les pixels un par un                   
-                    //     }
-                    // }
 
-                    for(let y = imgSize; y >= 0; y--){
-                        for(let x = imgSize; x >= 0; x--){
-                            pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
-                            ctx.putImageData(pixelData, x, y); //Applique au canvas de base les pixels un par un                   
-                        }
+            originCanva.getContext('2d').drawImage(img, 0, 0);
+            let imgSize = this.width;
+            while (getBase64Image(canvadoublerotation) != getBase64Image(originCanva)) {
+                var ctx = document.getElementById('doublerotation').getContext('2d');
+
+                // for(let y = 0; y <= imgSize; y++){
+                //     for(let x = 0; x <= imgSize; x++){
+                //         pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
+                //         ctx.putImageData(pixelData, x, y); //Applique au canvas de base les pixels un par un                   
+                //     }
+                // }
+
+                for(let y = imgSize; y >= 0; y--){
+                    for(let x = imgSize; x >= 0; x--){
+                        pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
+                        ctx.putImageData(pixelData, x, y); //Applique au canvas de base les pixels un par un                   
                     }
-                    await sleep(500);
                 }
-            };    
+
+                console.log("plop");
+                await sleep(500);
+            }    
         }
     </script>
 </html>
