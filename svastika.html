@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" integrity="sha384-PmY9l28YgO4JwMKbTvgaS7XNZJ30MK9FAZjjzXtlqyZCqBY6X6bXIkM++IkyinN+"
+        crossorigin="anonymous">
 </head>
 
 <body>
@@ -73,14 +74,60 @@
 
                     var pixelData = ctx.getImageData(x, y, 1, 1);
 
-                    if (x % 2 == 0 && y % 2 == 0)
-                        newCtx.putImageData(pixelData, x / 2, y / 2)
-                    else if (x % 2 == 0)
-                        newCtx.putImageData(pixelData, x / 2, height / 2 + y / 2)
-                    else if (y % 2 == 0)
-                        newCtx.putImageData(pixelData, width / 2 + x / 2, y / 2)
-                    else
-                        newCtx.putImageData(pixelData, width / 2 + x / 2, height / 2 + y / 2)
+
+                    let col = x;
+                    let lig = y;
+                    let l = width / 2;
+                    let h = height / 2;
+                    if ((x % 2 == 0) && (y % 2 == 0)) {
+                        col = x / 2;
+                        lig = y / 2;
+                    } else if ((x % 2 == 1) && (y % 2 == 0)) {
+                        col = (x - 1) / 2 + l;
+                        lig = y / 2;
+
+                        let milCol = 3 * l / 2;
+                        let milLig = h / 2;
+                        let colR = col - milCol;
+                        let ligR = milLig - lig;
+                        let c = ligR;
+                        let li = -colR;
+                        col = milCol + c;
+                        if (width / 2 % 2 == 0) {
+                            col--;
+                        }
+                        lig = milLig - li;
+                    } else if ((x % 2 == 0) && (y % 2 == 1)) {
+                        col = x / 2;
+                        lig = (y - 1) / 2 + h;
+
+                        let milCol = l / 2;
+                        let milLig = 3 * h / 2;
+                        let colR = col - milCol;
+                        let ligR = milLig - lig;
+                        let c = -ligR;
+                        let li = colR;
+                        col = milCol + c;
+                        lig = milLig - li;
+                        if (height / 2 % 2 == 0) {
+                            lig--;
+                        }
+                    } else {
+                        col = (x - 1) / 2 + l;
+                        lig = (y - 1) / 2 + h;
+
+                        let milieu = 3 * h / 2;
+                        col += 2 * (milieu - col);
+                        if (width / 2 % 2 == 0) {
+                            col--;
+                        }
+                        milieu = 3 * l / 2;
+                        lig += 2 * (milieu - lig);
+                        if (height / 2 % 2 == 0) {
+                            lig--;
+                        }
+                    }
+                    newCtx.putImageData(pixelData, col, lig)
                 }
             }
 
