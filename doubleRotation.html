@@ -4,31 +4,58 @@
         <title>Double rotation</title>
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <body onload="draw();">
+    <body>
         <h1>Hello World</h1>
         <h2>Double rotation</h2>
         <!-- Photomaton test canva -->
         <canvas width="256" height="256" id="doublerotation"></canvas>
-        
+        <button onclick="draw()">Draw image</button>
     </body>
     <script src="js/script.js"></script>
     <script>
         var originCanva = document.createElement("canvas");
         originCanva.width = 256;
         originCanva.height = 256;
-        function draw() {
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function getBase64Image(img) {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            var dataURL = canvas.toDataURL("image/png");
+
+            return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        }
+
+        async function draw() {
             var ctx = document.getElementById('doublerotation').getContext('2d');
+            var canvadoublerotation = document.getElementById('doublerotation');
             var pixelData;
             var img = new Image();
             img.src = 'img/MonaLisa.jpg';
             img.onload = function() {
                 originCanva.getContext('2d').drawImage(img, 0, 0);
                 let imgSize = this.width;
-                for(let y = 0; y <= imgSize; y++){
-                    for(let x = 0; x <= imgSize; x++){
-                        pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
-                        ctx.putImageData(pixelData, newX, newY); //Applique au canvas de base les pixels un par un                        
+                while (getBase64Image(canvadoublerotation) != getBase64Image(originCanva)) {
+                    // for(let y = 0; y <= imgSize; y++){
+                    //     for(let x = 0; x <= imgSize; x++){
+                    //         pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
+                    //         ctx.putImageData(pixelData, x, y); //Applique au canvas de base les pixels un par un                   
+                    //     }
+                    // }
+
+                    for(let y = imgSize; y >= 0; y--){
+                        for(let x = imgSize; x >= 0; x--){
+                            pixelData = originCanva.getContext("2d").getImageData(x,y,1,1); //prend un par un les pixels de l'image d'origine
+                            ctx.putImageData(pixelData, x, y); //Applique au canvas de base les pixels un par un                   
+                        }
                     }
+                    await sleep(500);
                 }
             };    
         }
