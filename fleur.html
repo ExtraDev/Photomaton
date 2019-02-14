@@ -17,7 +17,7 @@
         <canvas id="image-canvas"></canvas><br>
         <input type="file" name="" id="file" onchange="fileChanged(this)"><br>
         <input class="form-control" id="sleepInput" type="number" min="1"><br>
-        <button class="btn btn-primary" onclick="drawPhotomaton()">Draw Photomaton</button>
+        <button class="btn btn-primary" onclick="drawFlower()">Draw Photomaton</button>
     </section>
 </body>
 <script src="js/script.js"></script>
@@ -56,7 +56,7 @@
         }
     }
 
-    async function drawPhotomaton() {
+    async function drawFlower() {
 
         canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
 
