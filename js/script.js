@@ -309,10 +309,11 @@ function StepByStep() {
 
     if (getBase64Image(img) == getBase64Image(newCanvas))
         stepCount = 0;
+
+    returnStep();
 }
 
 async function StepOver() {
-
     canvas.width = img.width;
     canvas.height = img.height;
     newCanvas.width = img.width;
@@ -321,9 +322,13 @@ async function StepOver() {
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
 
     while (getBase64Image(img) != getBase64Image(newCanvas)) {
+        returnStep();
+        stepCount++;
         callImageMethod();
         await sleep(10);
+        
     }
+    stepCount = 0;
 }
 
 function callImageMethod() {
@@ -351,4 +356,13 @@ function callImageMethod() {
         default:
             break;
     }
+}
+
+/*
+ * RETURN NUMBER OF STEP
+ */
+let numberStep = document.getElementById("nbStep");
+
+function returnStep(){
+    numberStep.textContent = "Step N° "+stepCount;
 }
