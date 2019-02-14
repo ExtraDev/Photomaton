@@ -3,6 +3,7 @@
 
 <head>
     <title>Traitement d'images</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="css/style.css">
 
     <!-- Latest compiled and minified CSS -->
@@ -14,15 +15,37 @@
     <section class="container">
         <div class="row">
             <h1>Traitement d'image bijectives</h1>
-            <img style="display:none" id="my-image" src="./img/macron.jpg" alt="Not found"><br>
-            <canvas id="image-canvas"></canvas><br>
-            <input type="file" name="" id="file" onchange="fileChanged(this)"><br>
-            <select class="form-control" id="image-method">
-                <option selected value="photomaton">Photomaton</option>
-            </select>
-            <br>
-            <button class="btn btn-primary" onclick="StepByStep()">Next step</button>
-            <button class="btn btn-primary" onclick="StepOver()">Draw</button>
+            <div class="col-md-6">
+                <h3>Image de base</h3>
+                <hr>
+                <div class="text-center">
+                    <img id="my-image" src="./img/macron.jpg" alt="Not found">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Image modifiée</h3>
+                <hr>
+                <div class="text-center">
+                    <canvas style="display:none" id="canvas"></canvas>
+                    <canvas id="image-canvas"></canvas>
+                </div>
+            </div>
+        </div><br>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="file" name="" id="file" onchange="fileChanged(this)"><br>
+                <select class="form-control" id="image-method">
+                    <option selected value="photomaton">Photomaton</option>
+                    <option value="baker">Boulanger</option>
+                    <option value="double-rotation">Double Rotation</option>
+                    <option value="svastika">Svastika</option>
+                    <option value="flower">Fleur</option>
+                    <option value="capitaine-flower">Capitaine Fleur</option>
+                </select>
+                <br>
+                <button class="btn btn-primary" onclick="StepByStep()">Next step</button>
+                <button class="btn btn-primary" onclick="StepOver()">Draw</button>
+            </div>
         </div>
     </section>
 

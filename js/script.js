@@ -7,8 +7,10 @@
  */
 
 var img = document.getElementById('my-image');
-var canvas = document.createElement('canvas');
+var canvas = document.getElementById('canvas');
 var newCanvas = document.getElementById('image-canvas');
+
+var stepCount = 0;
 
 /*
  * START MAIN FUNCTIONS
@@ -118,7 +120,7 @@ function DoubleRotation() {
             var newCtx = newCanvas.getContext('2d');
             pixelData = ctx.getImageData(x, y, 1, 1);
 
-            newCtx.putImageData(pixelData, (x+1)%width, (y+1)%height);                 
+            newCtx.putImageData(pixelData, (x + 1) % width, (y + 1) % height);
         }
     }
 
@@ -180,12 +182,12 @@ function Svastika() {
                 row = (y - 1) / 2 + h;
 
                 let middle = 3 * h / 2;
-                col += 2 * (milieu - col);
+                col += 2 * (middle - col);
                 if (width / 2 % 2 == 0) {
                     col--;
                 }
-                milieu = 3 * l / 2;
-                row += 2 * (milieu - row);
+                middle = 3 * l / 2;
+                row += 2 * (middle - row);
                 if (height / 2 % 2 == 0) {
                     row--;
                 }
@@ -216,44 +218,44 @@ function Flower() {
             col = x;
             row = y;
 
-            if((x % 2 == 0)&&( y % 2 == 0)){
+            if ((x % 2 == 0) && (y % 2 == 0)) {
                 col = x / 2;
                 row = y / 2;
-            }else if((x % 2 == 1) && (y % 2 == 0)){
+            } else if ((x % 2 == 1) && (y % 2 == 0)) {
                 col = (x - 1) / 2 + l;
                 row = y / 2;
 
                 let middle = 3 * l / 2;
                 col += 2 * (middle - col);
-                if(width / 2 % 2 == 0){
-                col--;
+                if (width / 2 % 2 == 0) {
+                    col--;
                 }
-            }else if((x % 2 == 0)&&(y % 2 == 1)){
+            } else if ((x % 2 == 0) && (y % 2 == 1)) {
                 col = x / 2;
                 row = (y - 1) / 2 + h;
 
                 let middle = 3 * h / 2;
                 row += 2 * (middle - row);
-                if(height / 2 % 2 == 0){
-                row--;
+                if (height / 2 % 2 == 0) {
+                    row--;
                 }
-            }else{
-                col = (x - 1)/2+l;
-                row = (y - 1)/2+h;
+            } else {
+                col = (x - 1) / 2 + l;
+                row = (y - 1) / 2 + h;
 
                 let middle = 3 * l / 2;
                 col += 2 * (middle - col);
-                if(width / 2 % 2 == 0){
-                col--;
+                if (width / 2 % 2 == 0) {
+                    col--;
                 }
                 middle = 3 * h / 2;
                 row += 2 * (middle - row);
-                if(height / 2 % 2 == 0){
-                row--;
+                if (height / 2 % 2 == 0) {
+                    row--;
                 }
             }
 
-            newCtx.putImageData(pixelData, col, row);                 
+            newCtx.putImageData(pixelData, col, row);
         }
     }
 
@@ -294,14 +296,19 @@ function CapitaineFlower() {
 }
 
 function StepByStep() {
-    canvas.width = img.width;
-    canvas.height = img.height;
-    newCanvas.width = img.width;
-    newCanvas.height = img.height;
+    if (stepCount == 0) {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        newCanvas.width = img.width;
+        newCanvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+    }
 
-    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-    
     callImageMethod();
+    stepCount++;
+
+    if (getBase64Image(img) == getBase64Image(newCanvas))
+        stepCount = 0;
 }
 
 async function StepOver() {
@@ -315,7 +322,7 @@ async function StepOver() {
 
     while (getBase64Image(img) != getBase64Image(newCanvas)) {
         callImageMethod();
-        await sleep(100);
+        await sleep(10);
     }
 }
 
