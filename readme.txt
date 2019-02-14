@@ -1,0 +1,1 @@
+Utiliser le programme sur un serveur web sinon des erreurs "cors" bloqueront son exécution.
