@@ -72,23 +72,225 @@ function Photomaton() {
 }
 
 function Baker() {
+    let width = img.width;
+    let height = img.height;
 
+    for (let y = 0; y < height; y++) {
+
+        for (let x = 0; x < width; x++) {
+
+            var newX = 0;
+            var newY = 0;
+
+            var ctx = canvas.getContext('2d');
+            var newCtx = newCanvas.getContext('2d');
+
+            var pixelData = ctx.getImageData(x, y, 1, 1);
+
+            if ((y % 2 == 0) && (x < width / 2)) {
+                newX = 2 * x;
+                newY = y / 2;
+            } else if ((y % 2 != 0) && (x < width / 2)) {
+                newX = 2 * x + 1;
+                newY = (y - 1) / 2;
+            } else if ((y % 2 == 0) && (x >= width / 2)) {
+                newX = 2 * width - 1 - 2 * x;
+                newY = height - 1 - y / 2;
+            } else if ((y % 2 != 0) && (x >= width / 2)) {
+                newX = 2 * width - 2 - 2 * x;
+                newY = height - 1 - (y - 1) / 2;
+            }
+
+            newCtx.putImageData(pixelData, newX, newY)
+        }
+    }
+    canvas.getContext('2d').drawImage(newCanvas, 0, 0);
 }
 
 function DoubleRotation() {
+    let width = img.width;
+    let height = img.height;
 
+    for (let y = height; y >= 0; y--) {
+        for (let x = width; x >= 0; x--) {
+
+            var ctx = canvas.getContext('2d');
+            var newCtx = newCanvas.getContext('2d');
+            pixelData = ctx.getImageData(x, y, 1, 1);
+
+            newCtx.putImageData(pixelData, (x+1)%width, (y+1)%height);                 
+        }
+    }
+
+    canvas.getContext('2d').drawImage(newCanvas, 0, 0);
 }
 
 function Svastika() {
+    let width = img.width;
+    let height = img.height;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+
+            var ctx = canvas.getContext('2d');
+            var newCtx = newCanvas.getContext('2d');
+
+            var pixelData = ctx.getImageData(x, y, 1, 1);
+
+
+            let col = x;
+            let row = y;
+            let l = width / 2;
+            let h = height / 2;
+            if ((x % 2 == 0) && (y % 2 == 0)) {
+                col = x / 2;
+                row = y / 2;
+            } else if ((x % 2 == 1) && (y % 2 == 0)) {
+                col = (x - 1) / 2 + l;
+                row = y / 2;
+
+                let milCol = 3 * l / 2;
+                let milrow = h / 2;
+                let colR = col - milCol;
+                let rowR = milrow - row;
+                let c = rowR;
+                let li = -colR;
+                col = milCol + c;
+                if (width / 2 % 2 == 0) {
+                    col--;
+                }
+                row = milrow - li;
+            } else if ((x % 2 == 0) && (y % 2 == 1)) {
+                col = x / 2;
+                row = (y - 1) / 2 + h;
+
+                let milCol = l / 2;
+                let milrow = 3 * h / 2;
+                let colR = col - milCol;
+                let rowR = milrow - row;
+                let c = -rowR;
+                let li = colR;
+                col = milCol + c;
+                row = milrow - li;
+                if (height / 2 % 2 == 0) {
+                    row--;
+                }
+            } else {
+                col = (x - 1) / 2 + l;
+                row = (y - 1) / 2 + h;
+
+                let middle = 3 * h / 2;
+                col += 2 * (milieu - col);
+                if (width / 2 % 2 == 0) {
+                    col--;
+                }
+                milieu = 3 * l / 2;
+                row += 2 * (milieu - row);
+                if (height / 2 % 2 == 0) {
+                    row--;
+                }
+            }
+            newCtx.putImageData(pixelData, col, row)
+        }
+    }
+
+    canvas.getContext('2d').drawImage(newCanvas, 0, 0);
 
 }
 
 function Flower() {
+    let width = img.width;
+    let height = img.height;
+    let l = width / 2;
+    let h = height / 2;
+    let col;
+    let row;
 
+    for (let y = height; y >= 0; y--) {
+        for (let x = width; x >= 0; x--) {
+
+            var ctx = canvas.getContext('2d');
+            var newCtx = newCanvas.getContext('2d');
+            pixelData = ctx.getImageData(x, y, 1, 1);
+
+            col = x;
+            row = y;
+
+            if((x % 2 == 0)&&( y % 2 == 0)){
+                col = x / 2;
+                row = y / 2;
+            }else if((x % 2 == 1) && (y % 2 == 0)){
+                col = (x - 1) / 2 + l;
+                row = y / 2;
+
+                let middle = 3 * l / 2;
+                col += 2 * (middle - col);
+                if(width / 2 % 2 == 0){
+                col--;
+                }
+            }else if((x % 2 == 0)&&(y % 2 == 1)){
+                col = x / 2;
+                row = (y - 1) / 2 + h;
+
+                let middle = 3 * h / 2;
+                row += 2 * (middle - row);
+                if(height / 2 % 2 == 0){
+                row--;
+                }
+            }else{
+                col = (x - 1)/2+l;
+                row = (y - 1)/2+h;
+
+                let middle = 3 * l / 2;
+                col += 2 * (middle - col);
+                if(width / 2 % 2 == 0){
+                col--;
+                }
+                middle = 3 * h / 2;
+                row += 2 * (middle - row);
+                if(height / 2 % 2 == 0){
+                row--;
+                }
+            }
+
+            newCtx.putImageData(pixelData, col, row);                 
+        }
+    }
+
+    canvas.getContext('2d').drawImage(newCanvas, 0, 0);
 }
 
 function CapitaineFlower() {
+    let width = img.width;
+    let height = img.height;
 
+    let nb = 2;
+    let nbx = nb;
+    let nby = nb;
+
+    width -= width % nbx;
+    height -= height % nby;
+
+    for (let px = 0, mx = 0; px < width; px += nbx, mx++) {
+        for (let py = 0, my = 0; py < height; py += nby, my++) {
+            for (let tx = 0; tx < nbx; tx++) {
+                let dx = (width / nbx) * (tx + 1) - mx - 1;
+
+                for (let ty = 0; ty < nby; ty++) {
+                    let dy = (height / nby) * (ty + 1) - my - 1;
+
+                    var ctx = canvas.getContext('2d');
+                    var newCtx = newCanvas.getContext('2d');
+
+                    var pixelData = ctx.getImageData(dx, dy, 1, 1);
+
+
+                    newCtx.putImageData(pixelData, px + tx, py + ty)
+                }
+            }
+        }
+    }
+    canvas.getContext('2d').drawImage(newCanvas, 0, 0);
 }
 
 function StepByStep() {
